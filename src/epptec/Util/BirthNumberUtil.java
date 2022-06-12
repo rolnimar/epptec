@@ -1,4 +1,4 @@
-package epptec.utils;
+package epptec.Util;
 
 public class BirthNumberUtil {
 	public static boolean isRightFormat(String birthNumber){

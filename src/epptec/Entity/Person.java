@@ -1,8 +1,6 @@
 package epptec.Entity;
 
 
-import epptec.utils.BirthNumberUtil;
-
 public class Person {
 	private final String name;
 	private final String surname;

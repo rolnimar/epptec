@@ -1,15 +1,19 @@
-package epptec.Controller;
+package epptec.Service;
 
 import epptec.Entity.Person;
-import epptec.utils.BirthNumberUtil;
+import epptec.Util.BirthNumberUtil;
 
 import java.util.Collection;
 import java.util.Scanner;
 
-public class IOController {
+public class IOService {
 	private final Scanner scanner;
+	private static final IOService instance = new IOService();
 
-	public IOController(){
+	public static IOService getInstance(){
+		return instance;
+	}
+	private IOService(){
 		scanner = new Scanner(System.in);
 	}
 
@@ -28,7 +32,7 @@ public class IOController {
 			printLine("Try entering non empty input.");
 			input = scanner.nextLine();
 		}
-		return input;
+		return input.trim();
 	}
 
 	public void printBirthNumberInput() {
@@ -90,7 +94,7 @@ public class IOController {
 	}
 
 
-	public void printValid() {
+	public void printInvalid() {
 		printLine("Write a valid option please.");
 	}
 

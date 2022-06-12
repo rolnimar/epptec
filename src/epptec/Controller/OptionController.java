@@ -3,31 +3,32 @@ package epptec.Controller;
 import epptec.Entity.Person;
 import epptec.Exception.PersonAlreadyExistsException;
 import epptec.Exception.PersonNotFoundException;
+import epptec.Service.IOService;
 import epptec.Service.PersonService;
 
 import java.util.Collection;
 
 public class OptionController {
-	private final IOController ioController;
+	private final IOService ioService;
 	private final PersonService personService;
 	private boolean exit = false;
 
 	public OptionController(){
-		this.ioController = new IOController();
+		this.ioService = IOService.getInstance();
 		this.personService = PersonService.getInstance();
 	}
 
 	public void init() {
 
 		do {
-			ioController.printOptions();
-			String option = ioController.scanString();
+			ioService.printOptions();
+			String option = ioService.scanString();
 			switch (option) {
 				case "1" -> handleFindPerson();
 				case "2" -> handleCreatePerson();
 				case "3" -> handleDeletePerson();
 				case "4" -> exit = true;
-				default -> ioController.printValid();
+				default -> ioService.printInvalid();
 			}
 		} while (!exit);
 	}
@@ -35,58 +36,58 @@ public class OptionController {
 	private void handleDeletePerson() {
 		Collection<Person> personList = personService.getAllPersons();
 		if(personList.isEmpty()){
-			ioController.printLine("Database is empty.");
+			ioService.printLine("Database is empty.");
 			handleNextAction();
 			return;
 		}
-		ioController.printAllPersons(personList);
-		ioController.printChoosePerson();
-		String birthNumber = ioController.scanBirthNumber();
+		ioService.printAllPersons(personList);
+		ioService.printChoosePerson();
+		String birthNumber = ioService.scanBirthNumber();
 		try{
 			personService.deletePersonByBirthNumber(birthNumber);
-			ioController.printCurrentDatabaseState(personService.getAllPersons());
+			ioService.printCurrentDatabaseState(personService.getAllPersons());
 		} catch (PersonNotFoundException ex){
-			ioController.printLine(ex.getMessage());
+			ioService.printLine(ex.getMessage());
 		}
 		handleNextAction();
 	}
 
 	private void handleCreatePerson() {
-		ioController.printCreatePerson();
-		ioController.printBirthNumberPrompt();
-		String birthNumber = ioController.scanBirthNumber();
-		ioController.printNamePrompt();
-		String name = ioController.scanString();
-		ioController.printSurnamePrompt();
-		String surname = ioController.scanString();
+		ioService.printCreatePerson();
+		ioService.printBirthNumberPrompt();
+		String birthNumber = ioService.scanBirthNumber();
+		ioService.printNamePrompt();
+		String name = ioService.scanString();
+		ioService.printSurnamePrompt();
+		String surname = ioService.scanString();
 		try{
 			Person person = new Person(name,surname,birthNumber);
 			personService.savePerson(person);
-			ioController.printCurrentDatabaseState(personService.getAllPersons());
+			ioService.printCurrentDatabaseState(personService.getAllPersons());
 		} catch (PersonAlreadyExistsException ex){
-			ioController.printLine(ex.getMessage());
+			ioService.printLine(ex.getMessage());
 		}
 		handleNextAction();
 	}
 
 	private void handleFindPerson() {
-		ioController.printBirthNumberInput();
-		String birthNumber = ioController.scanBirthNumber();
+		ioService.printBirthNumberInput();
+		String birthNumber = ioService.scanBirthNumber();
 		try{
 			Person person = personService.findPerson(birthNumber);
-			ioController.printPerson(person);
+			ioService.printPerson(person);
 		} catch(PersonNotFoundException ex){
-			ioController.printLine(ex.getMessage());
+			ioService.printLine(ex.getMessage());
 		}
 		handleNextAction();
 	}
 
 	private void handleNextAction() {
-		ioController.printContinue();
-		String input = ioController.scanString();
+		ioService.printContinue();
+		String input = ioService.scanString();
 		while(!input.equals("n") && !input.equals("y")){
-			ioController.wrongContinueInput();
-			input = ioController.scanString();
+			ioService.wrongContinueInput();
+			input = ioService.scanString();
 		}
 		if(input.equals("n")){
 			exit = true;
